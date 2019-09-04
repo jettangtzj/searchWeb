@@ -28,7 +28,7 @@
 <!-- <form onsubmit="return false;" action="./"> -->
 <div class="input-container">
 
-<input type="search" id="search_input" autofocus="autofocus" maxlength="20" class="keyword-input"> 
+<input type="q" id="search_input" autofocus="autofocus" maxlength="20" class="keyword-input"> 
 
 </div>
 </form>
@@ -49,13 +49,14 @@
 	$('#search_input').bind('keyup', function(event) {
 　　if (event.keyCode == "13") {
 　　　　//回车执行查询
-　　　　 var search=$('#search_input').val();
-		if(search==''){
+　　　　 var q=$('#search_input').val();
+		if(q==''){
 			return false;
 		}else{
-			location.href="./result.html?search="+search;
+			location.href="./result.html?q="+q;
 		}
 　　}
 });
 </script>
-</body></html>
+</body>
+</html>

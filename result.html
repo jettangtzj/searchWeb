@@ -1,94 +1,138 @@
 <html>
-<head><meta charset="utf-8" />
+	<head>
+		<meta charset="utf-8" />
 
-    <link rel="stylesheet" type="text/css" href="my.css" />
-    <script type="text/javascript" src="cookie.js"></script>
-    <script src="layui/layui.all.js"></script>
-    <link rel="stylesheet" type="text/css" href="layui/css/layui.css">
-    <script type="text/javascript" src="jquery.js"></script>
-    <style>
-    </style>
-    <style type="text/css">
-    	.content{
-    		width: 45%;
-    	}
-    	.title a{
-    		color:#1d42ee;
-    	}
-    </style>
-</head>
-<body>
-<div style="float: left;padding-left: 10px;">
-	<div style="float: left;width: 200px;margin-top: 15px;height: 50px;">
-		<img style="width: 200px;height: 50px;" src="logo.png">
-	</div>
-	
-	<div class="hosts" style="width:80%;margin-top: -40px;float: left;margin-left: 200px;">
+		<link rel="stylesheet" type="text/css" href="my.css" />
+		<script type="text/javascript" src="cookie.js"></script>
+		<script src="layui/layui.all.js"></script>
+		<link rel="stylesheet" type="text/css" href="layui/css/layui.css">
+		<script type="text/javascript" src="jquery.js"></script>
+		<style>
+		</style>
+		<style type="text/css">
+			.content {
+				width: 45%;
+			}
 
-		<div id="out">
-		    <div id="ser_box">
-		        <input type="search" id="ipt" /><span><input id="su" value="搜索一下" class="bg s_btn" type="submit" onclick="searchkey()"></span>
-		    </div>
-			
+			.title a {
+				color: #1d42ee;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="float: left;padding-left: 10px;">
+			<div style="float: left;width: 200px;margin-top: 15px;height: 50px;">
+				<img style="width: 200px;height: 50px;" src="logo.png">
+			</div>
+
+			<div class="hosts" style="width:80%;margin-top: -40px;float: left;margin-left: 200px;">
+
+				<div id="out">
+					<div id="ser_box">
+						<input type="q" id="ipt" /><span><input id="su" value="搜索一下" class="bg s_btn" type="submit" onclick="searchkey()"></span>
+					</div>
+
+				</div>
+				<br>
+				<br>
+				<div id="todo">
+				</div>
+				<div id="test1"></div>
+			</div>
 		</div>
-		<br>
-		<br>
-		<div id="todo">
-		</div>
-		<div id="test1"></div>
-	</div>
-</div>
-</body>
+	</body>
 
-<script type="text/javascript">
-	function searchkey(){
-		var key=$("#ipt").val();
-		location.href="result.html?search="+key;
-	}
-	var search=getQueryString("search");
-	search=search.search;
-	var pagenow=getQueryString("pagenow");
-	pagenow=pagenow.pagenow;
-	$("#ipt").val(search);
-	if(pagenow==""||pagenow==undefined){
-		pagenow="0";
-	}
-	api="Index/Search/search";
-	var config=request(api);
-	$.ajax({
-	    type:"post",
-	    url:config.url,
-	    contentType:config.contentType,
-	    data:{key:search,pagenow:pagenow},
-	    success:function(res){
-	    	res=JSON.parse(res);
-	    	if(res.msg=="1"){
-	    		//组成list
-	    		var html="";
-	    		for(var i=0;i<res.data.length;i++){
-	    			html+="<div id='list'><p class='title'><a target='_blank' href='"+res.data[i].url+"'>"+res.data[i].title+"</a></p><p class='content'>"+res.data[i].content+"</p><p class='link'>"+res.data[i].urldata+" &emsp;关键词评分:"+res.data[i].grade+"分- <span class='quick'>SoSo搜索引擎提供数据支持</span></p></div>";
-	    		}
-	    		$('#todo').html(html);
-	    		layui.use('laypage', function(){
-				  var laypage = layui.laypage;
-				  //执行一个laypage实例
-				  	laypage.render({
-					    elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-					    ,limit:10
-					    ,count: res.nums //数据总数，从服务端得到
-					    ,curr:pagenow
-					    ,jump: function(obj, first){
-						    //首次不执行
-						    if(!first){
-						      	location.href="result.html?search="+search+"&pagenow="+obj.curr;
-						    }
-						}
-				  	});
-				});
-	    	}else{
-	    		$('#todo').html("该词暂无收录，请重新输入其他词进行搜索。。。");
-	    	}
-	    }
-	});
-</script>
+	<script type="text/javascript">
+		function searchkey() {
+			var key = $("#ipt").val();
+			location.href = "result.html?q=" + key;
+		}
+		$('#ipt').bind('keyup', function(event) {
+			if (event.keyCode == "13") {
+				searchkey();
+			}
+		})
+		var q = getQueryString("q");
+		q = q.q;
+		var page = getQueryString("page");
+		page = page.page;
+		$("#ipt").val(q);
+		if (page == "" || page == undefined) {
+			page = "0";
+		}
+		api = "search?q=%E7%BE%8E%E5%A5%B3&page=1";
+		var config = request(api);
+		$.ajax({
+			type: "get",
+			// url: "test.json",
+			// url: config.url,
+			url: "http://182.61.161.239/search",
+			contentType: config.contentType,
+			data: {
+				q: q,
+				page: page
+			},
+			success: function(res) {
+				let arrSearch = res.content;
+				console.log(arrSearch);
+				var num = 0, nums;
+				for (let value of arrSearch) {
+					let titleSearch = value.title;
+					if (titleSearch.indexOf(q) != -1) {
+						num++;
+					}
+					// console.log(titleSearch);
+					// console.log(num);
+				}
+				
+				//页码数
+				if(num < 10 && num > 0){
+					nums = page * 10;
+				}else if(num === 0){
+					alert("暂无第" +page+"页图片。。。")
+					history.go(-1);
+				}
+				
+				if (num) {
+					//组成list
+					var html = "";
+					for (var i = 0; i < num; i++) {
+						// console.log(num);
+						html += "<div id='list'><p class='title' style='width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
+							"</a></p><p class='content' style='width: 540; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>" + arrSearch[i].content + "</p></div><br />";
+					}
+					$('#todo').html(html);
+					// console.log(res.totalElements);
+					layui.use('laypage', function() {
+						var laypage = layui.laypage;
+						//执行一个laypage实例
+						laypage.render({
+							elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+								,
+							limit: 10,
+							count: (nums ? nums : 100) //数据总数，从服务端得到
+								,
+							curr: page,
+							jump: function(obj, first) {
+								
+								
+								//首次不执行
+								if (!first) {
+									location.href = "result.html?q=" + q + "&page=" + obj.curr;
+								}
+							}
+						})
+					})
+				}else{
+					$('#todo').html("该词暂无收录，请重新输入其他词进行搜索。。。");
+				}
+			},
+			error: function(responseText, textStatus, XMLHttpRequest) {
+				console.log(XMLHttpRequest); //XMLHttpRequest对象
+				console.log(XMLHttpRequest.responseText);
+				console.log(textStatus); //请求状态：success，error
+				console.log(responseText); //请求返回的内容
+			}
+		})
+	</script>
 </html>

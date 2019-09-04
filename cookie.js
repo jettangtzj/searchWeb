@@ -4,7 +4,9 @@
  * @param  {[type]} cname [description]
  * @return {[type]}       [description]
  */
-var server="http://127.0.0.1/php-api/index.php/";
+// var server="D:/xiangmu/search/searchWeb";
+// var server="http://127.0.0.1/php-api/index.php/";
+var server="http://182.61.161.239/";
 function getCookie(cname)
 {
   var name = cname + "=";
@@ -44,7 +46,7 @@ function getRootPath(){
 * 根据变量名获取匹配值
 */
 function getQueryString(name) {
-  var url = window.location.search; //获取url  
+	var url = window.location.search; //获取url  
        var theRequest = new Object();  //新建对象用来保存参数
        if (url.indexOf("?") != -1) {  //判断url是否有？
           var str = url.substr(1);  //获取？后面的字符串如id=1&name=111之类的
@@ -52,7 +54,7 @@ function getQueryString(name) {
           for(var i = 0; i < strs.length; i ++) {  
              theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]); //再把如id=1形式的变成id:1
           }  
-       }  
+       }
        return theRequest;
 } 
 /**
@@ -60,8 +62,13 @@ function getQueryString(name) {
  */
 function request(api){
     var url=server+api;
+	// if (url.indexOf("?") != -1) {  //判断url是否有？
+	//    var url1 = u.split("&").join("");  //删除&
+	// }  
+	// return url1;
+	
     var token=getCookie("token");
-    var data={url:url,token:token,contentType:"application/x-www-form-urlencoded",}
+    var data={url:url,token:token,contentType:"application/x-www-form-urlencoded",};
     return data;
   //   alert(data.account)
   //   $.ajax({
