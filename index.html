@@ -49,8 +49,8 @@
 	$('#search_input').bind('keyup', function(event) {
 　　if (event.keyCode == "13") {
 　　　　//回车执行查询
-　　　　 var q=$('#search_input').val();
-		if(q==''){
+　　　　 var q=$('#search_input').val().replace(/^\s+|\s+$/g,"");
+		if(q.trim() == ''){
 			return false;
 		}else{
 			location.href="./result.html?q="+q;
