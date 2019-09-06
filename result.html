@@ -100,8 +100,8 @@
 							//组成list
 							var html = "";
 							for (var i = 0; i < num; i++) {
-								html += "<div id='list'><p class='title' style='width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
-									"</a></p><p class='content' style='width: 540; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>" + arrSearch[i].content + "</p></div><br />";
+								html += "<div id='list' style='height: 90px;'><p class='title' style='width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
+									"</a></p><div class='content' style='width: 540; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
 							}
 							$('#todo').html(html);
 							layui.use('laypage', function() {
