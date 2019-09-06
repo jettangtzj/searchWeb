@@ -22,7 +22,7 @@
 	<body>
 		<div style="float: left;padding-left: 10px;">
 			<div style="float: left;width: 200px;margin-top: 15px;height: 50px;" onclick="changeURL">
-				<a href="./index.html">
+				<a href="index.html">
 					<img style="width: 200px;height: 50px;" src="logo.png">
 				</a>
 			</div>
@@ -47,7 +47,7 @@
 	<script type="text/javascript">
 		function searchkey() {
 			var key = $("#ipt").val();
-			location.href = "result.html?q=" + key;
+			location.href = "result.html?q=" + key + "&page="+page;
 		}
 		//回车触发点击事件
 		$('#ipt').bind('keyup', function(event) {
@@ -62,15 +62,15 @@
 		page = page.page;
 		$("#ipt").val(q);
 		if (page == "" || page == undefined) {
-			page = "0";
+			page = "1";
 		}
-		api = "search?q=%E7%BE%8E%E5%A5%B3&page=1";
-		var config = request(api);
+		//api = "search?q=%E7%BE%8E%E5%A5%B3&page=1";
+		//var config = request(api);
 		$.ajax({
 			type: "get",
 			// url: "test.json",
 			url: "http://182.61.161.239/search",
-			contentType: config.contentType,
+			//contentType: config.contentType,
 			data: {
 				q: q,
 				page: page
