@@ -66,6 +66,9 @@
 		}
 		//api = "search?q=%E7%BE%8E%E5%A5%B3&page=1";
 		//var config = request(api);
+		if(q.trim() == ""){
+			$('#todo').html("请输入内容");
+		}
 		$.ajax({
 			type: "get",
 			// url: "test.json",
@@ -77,57 +80,39 @@
 			},
 			success: function(res) {
 				let arrSearch = res.content;
-				var num = 0, nums;
-				//去空格非空验证
-				if(q.trim() == ""){
-					$('#todo').html("请输入内容");
+				var num = arrSearch.length, nums;
+				
+				if(!arrSearch){
+					$('#todo').html("该词暂无收录，请重新输入其他词进行搜索。。。");
 				}else{
-					if(!arrSearch){
-						$('#todo').html("该词暂无收录，请重新输入其他词进行搜索。。。");
-					}else{
-						for (let value of arrSearch) {
-							let titleSearch = value.title;
-							if (titleSearch.indexOf(q) != -1) {
-								num++;
-							}
-						}
-						//页码数
-						if(num < 10 && num > 0){
-							nums = page * 10;
-						}else if(num === 0){
-							alert("暂无您想要的" +q+"图片啦。。。")
-							history.go(-1);
-						}
-						if (num) {
-							//组成list
-							var html = "";
-							for (var i = 0; i < num; i++) {
-								html += "<div id='list' style='height: 90px;'><p class='title' style='width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
-									"</a></p><div class='content' style='width: 540; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
-							}
-							$('#todo').html(html);
-							layui.use('laypage', function() {
-								var laypage = layui.laypage;
-								//执行一个laypage实例
-								laypage.render({
-									elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-										,
-									limit: 10,
-									count: (nums < 100 ? nums : 100) //数据总数，从服务端得到
-										,
-									curr: page,
-									jump: function(obj, first) {
-										
-										
-										//首次不执行
-										if (!first) {
-											location.href = "result.html?q=" + q + "&page=" + obj.curr;
-										}
-									}
-								})
-							})
-						}
+					//页码数
+					nums = res.totalPages >= 10 ? 10 : res.totalPages;
+					//组成list
+					var html = "";
+					for (var i = 0; i < num; i++) {
+						html += "<div id='list' style='height: 90px;'><p class='title' style='width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
+							"</a></p><div class='content' style='width: 540; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
 					}
+					$('#todo').html(html);
+					layui.use('laypage', function() {
+						var laypage = layui.laypage;
+						//执行一个laypage实例
+						laypage.render({
+							elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+								,
+							limit: 10,
+							count: res.totalElements, //数据总数，从服务端得到
+							curr: page,
+							jump: function(obj, first) {
+								
+								
+								//首次不执行
+								if (!first) {
+									location.href = "result.html?q=" + q + "&page=" + obj.curr;
+								}
+							}
+						})
+					})
 				}
 			},
 			error: function(responseText, textStatus, XMLHttpRequest) {
