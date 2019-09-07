@@ -46,6 +46,10 @@
 
 	<script type="text/javascript">
 		function searchkey() {
+			if(q.trim() == ""){
+				$('#todo').html("请输入内容");
+				return;
+			}
 			var key = $("#ipt").val();
 			location.href = "result.html?q=" + key + "&page="+page;
 		}
@@ -66,9 +70,6 @@
 		}
 		//api = "search?q=%E7%BE%8E%E5%A5%B3&page=1";
 		//var config = request(api);
-		if(q.trim() == ""){
-			$('#todo').html("请输入内容");
-		}
 		$.ajax({
 			type: "get",
 			// url: "test.json",
