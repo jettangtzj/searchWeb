@@ -68,58 +68,59 @@
 		//var config = request(api);
 		if(q.trim() == ""){
 			$('#todo').html("请输入内容");
-			return;
-		}
-		$.ajax({
-			type: "get",
-			// url: "test.json",
-			url: "http://182.61.161.239/search",
-			//contentType: config.contentType,
-			data: {
-				q: q,
-				page: page
-			},
-			success: function(res) {
-				let arrSearch = res.content;
-				var num = arrSearch.length, nums;
-				
-				if(!arrSearch){
-					$('#todo').html("该词暂无收录，请重新输入其他词进行搜索。。。");
-				}else{
-					//页码数
-					nums = res.totalPages >= 10 ? 10 : res.totalPages;
-					//组成list
-					var html = "";
-					for (var i = 0; i < num; i++) {
-						html += "<div id='list' style='height: 90px;'><p class='title' style='width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
-							"</a></p><div class='content' style='width: 540; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
-					}
-					$('#todo').html(html);
-					layui.use('laypage', function() {
-						var laypage = layui.laypage;
-						//执行一个laypage实例
-						laypage.render({
-							elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-								,
-							limit: 10,
-							count: (res.totalElements < 100 ? res.totalElements : 100) //数据总数，从服务端得到
-								,
-							curr: page,
-							jump: function(obj, first) {
-								
-								
-								//首次不执行
-								if (!first) {
-									location.href = "result.html?q=" + q + "&page=" + obj.curr;
+		}else{
+			$.ajax({
+				type: "get",
+				// url: "test.json",
+				url: "http://182.61.161.239/search",
+				//contentType: config.contentType,
+				data: {
+					q: q,
+					page: page
+				},
+				success: function(res) {
+					let arrSearch = res.content;
+					var num = arrSearch.length, nums;
+					
+					if(!arrSearch){
+						$('#todo').html("该词暂无收录，请重新输入其他词进行搜索。。。");
+					}else{
+						//页码数
+						nums = res.totalPages >= 10 ? 10 : res.totalPages;
+						//组成list
+						var html = "";
+						for (var i = 0; i < num; i++) {
+							html += "<div id='list' style='height: 90px;'><p class='title' style='width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
+								"</a></p><div class='content' style='width: 540; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
+						}
+						$('#todo').html(html);
+						layui.use('laypage', function() {
+							var laypage = layui.laypage;
+							//执行一个laypage实例
+							laypage.render({
+								elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+									,
+								limit: 10,
+								count: (res.totalElements < 100 ? res.totalElements : 100) //数据总数，从服务端得到
+									,
+								curr: page,
+								jump: function(obj, first) {
+									
+									
+									//首次不执行
+									if (!first) {
+										location.href = "result.html?q=" + q + "&page=" + obj.curr;
+									}
 								}
-							}
+							})
 						})
-					})
+					}
+				},
+				error: function(responseText, textStatus, XMLHttpRequest) {
+					console.log(error);
 				}
-			},
-			error: function(responseText, textStatus, XMLHttpRequest) {
-				console.log(error);
-			}
-		})
+			});
+		}
+		
 	</script>
 </html>
