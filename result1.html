@@ -1,0 +1,141 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,minimum-scale=1, user-scalable=no">
+		<title>SOSO搜索</title>
+		<link rel="stylesheet" type="text/css" href="my1.css" />
+		<script type="text/javascript" src="cookie.js"></script>
+		<script src="layui/layui.all.js"></script>
+		<link rel="stylesheet" type="text/css" href="layui/css/layui.css">
+		<script type="text/javascript" src="jquery.js"></script>
+		<style>
+		</style>
+		<style type="text/css">
+			@media all and (min-width: 0) and (max-width: 700px){
+				*{margin: 0; padding: 0;}
+				#search{
+					margin-left: 10px;
+					height: 100%;
+				}
+				#logo{
+					margin: 15px 0;
+				}
+				#test1, #ser_box, #logo{
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+				.title a {
+					color: #1d42ee;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="search">
+			<div id="logo">
+				<a href="index.html">
+					<img style="width: 200px;height: 50px;" src="logo.png">
+				</a>
+			</div>
+		
+			<div class="hosts">
+		
+				<div id="out">
+					<div id="ser_box">
+						<input type="q" id="ipt" /><span><input id="su" value="搜索一下" class="bg s_btn" type="submit" onclick="searchkey()"></span>
+					</div>
+				</div>
+				<br>
+				<br>
+				<div id="todo"></div>
+				<div id="test1"></div>
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+			console.log("手机端");
+		
+		function searchkey() {
+			var key = $("#ipt").val();
+			location.href = "result1.html?q=" + key + "&page="+page;
+		}
+		//回车触发点击事件
+		$('#ipt').bind('keyup', function(event) {
+			if (event.keyCode == "13") {
+				searchkey();
+			}
+		})
+		
+		var q = getQueryString("q");
+		q = q.q;
+		var page = getQueryString("page");
+		page = page.page;
+		$("#ipt").val(q);
+		if (page == "" || page == undefined) {
+			page = "1";
+		}
+		//api = "search?q=%E7%BE%8E%E5%A5%B3&page=1";
+		//var config = request(api);
+		if(q.trim() == ""){
+			$('#todo').html("请输入内容");
+		}else{
+			$.ajax({
+				type: "get",
+				// url: "test.json",
+				url: "http://182.61.161.239/search",
+				//contentType: config.contentType,
+				data: {
+					q: q,
+					page: page
+				},
+				success: function(res) {
+					let arrSearch = res.content;
+					var num = arrSearch.length, nums;
+					if(!arrSearch){
+						$('#todo').html("该词暂无收录，请重新输入其他词进行搜索。。。");
+					}else{
+						//页码数
+						nums = res.totalPages >= 10 ? 10 : res.totalPages;
+						//组成list
+						var html = "";
+						for (var i = 0; i < num; i++) {
+							html += "<div id='list' style='height: 90px;'><p class='title' style='font-size: 0.95rem; font-family: arial; font-weight: bold; width: 85%; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
+								"</a></p><p class='date' style='style='font-size: 0.8125rem;'>更新时间：" + arrSearch[i].updateTime + "</p><div class='content' style='font-size: 0.8125rem; width: 95%; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
+						}
+						$('#todo').html(html);
+						layui.use('laypage', function() {
+							var laypage = layui.laypage;
+							//执行一个laypage实例
+							laypage.render({
+								elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+									,
+								limit: 10,
+								groups: 2,
+								count: (res.totalElements < 100 ? res.totalElements : 100) //数据总数，从服务端得到
+									,
+								curr: page,
+								jump: function(obj, first) {
+									
+									
+									//首次不执行
+									if (!first) {
+										location.href = "result1.html?q=" + q + "&page=" + obj.curr;
+									}
+								}
+							})
+						})
+					}
+				},
+				error: function(responseText, textStatus, XMLHttpRequest) {
+					console.log(error);
+				}
+			});
+		}
+		}else{
+			console.log("pc端");
+		}
+	</script>
+</html>

@@ -1,0 +1,38 @@
+
+#ser_box{
+	width:97%;
+	height:32px;
+	border: 1px solid blue;
+	text-align: center;
+}
+#ipt{
+	width:80%;
+	height: 26px;
+	margin-top: 2px;
+	padding-left: 5px;
+	border: 0;
+	outline: 0;
+	font-family: "微软雅黑";
+	font-size: 16px;
+}
+.s_btn {
+	position:relative;
+    width: 100px;
+    height: 36px;
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 1px;
+    background: #3385ff;
+    border-bottom: 1px solid #2d78f4;
+    outline: medium;
+}
+span.search{
+	color:#c60a00;
+}
+span.quick{
+	color:#666666;
+	text-decoration:underline;
+}
+p.title span.search{
+	text-decoration:underline;
+}
