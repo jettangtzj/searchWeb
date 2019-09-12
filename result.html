@@ -46,6 +46,7 @@
 	<script type="text/javascript">
 		function searchkey() {
 			var key = $("#ipt").val();
+			if(page != 1){return page = 1};
 			location.href = "result.html?q=" + key + "&page="+page;
 		}
 		//回车触发点击事件
@@ -90,7 +91,7 @@
 						var html = "";
 						for (var i = 0; i < num; i++) {
 							html += "<div id='list' style='height: 90px;'><p class='title' style='font-size: 0.95rem; font-family: arial; font-weight: bold; width: 440; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'><a target='_blank' href='" + arrSearch[i].url + "'>" + arrSearch[i].title +
-								"</a></p><p class='date' style='style='font-size: 0.8125rem;'>更新时间：" + arrSearch[i].updateTime + "</p><div class='content' style='font-size: 0.8125rem; width: 550; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
+								"</a></p><div class='content' style='font-size: 0.8125rem; width: 550; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;'>" + arrSearch[i].content + "</div></div><br />";
 						}
 						$('#todo').html(html);
 						layui.use('laypage', function() {
